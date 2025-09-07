@@ -8,11 +8,19 @@ public class Tutorial : MonoBehaviour
 {
     public GameObject Image;
     public TextMeshProUGUI textMeshProUGUI;
-    void Start()
+    void Awake()
     {
-        StartCoroutine(Text());
-
+        if (GameDataManager.Instance.data.PlayTutorial)
+        {
+            StartCoroutine(Text());
+        }
+        else
+        {
+            Image.SetActive(false);
+            textMeshProUGUI.text = "Error";
+        }
     }
+
     IEnumerator Text()
     {
         Debug.Log("started Tutorial");
@@ -29,6 +37,7 @@ public class Tutorial : MonoBehaviour
         Image.SetActive(true);
         textMeshProUGUI.text = "You can shoot whit Z";
         yield return new WaitForSeconds(5);
+        GameDataManager.Instance.data.PlayTutorial = false;
         Image.SetActive(false);}
 
 }

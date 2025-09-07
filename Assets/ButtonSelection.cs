@@ -44,10 +44,12 @@ public class ButtonSelection : MonoBehaviour
         {
             Button btn = ButtonContainer.transform.GetChild(i).GetComponent<Button>();
             btn.animator.SetTrigger("Normal");
+            btn.animator.SetBool("HighlightetButton", false);
+            btn.animator.SetBool("PressedButton", false);
         }
         Button current = ButtonContainer.transform.GetChild(index).GetComponent<Button>();
-        current.animator.SetTrigger("Highlighted");
-        current.animator.SetTrigger("Selected");
+        current.animator.SetBool("HighlightetButton", true);
+        current.animator.SetBool("PressedButton", true);
     }
 
     IEnumerator PressButton(int index)

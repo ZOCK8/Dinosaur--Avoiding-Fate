@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -171,7 +172,10 @@ public class MeteorSpawning : MonoBehaviour
             
         meteor.transform.SetParent(MeteorContainer.transform);
         meteor.name = "Meteor";
-        meteor.transform.position = SpawnPoint;
+        float offsetX = Random.Range(-8f, 8f);
+        Vector3 newSpawnPoint = new Vector3(SpawnPoint.x + offsetX, SpawnPoint.y, 0);
+        meteor.transform.position = newSpawnPoint;
+
         
         meteorgotoposition = new Vector3(
             Random.Range(MinXPosition, MaxXPosition),

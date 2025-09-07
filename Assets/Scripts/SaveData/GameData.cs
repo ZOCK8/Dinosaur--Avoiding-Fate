@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameData       // Serializable class to hold game data
 {
     public string playerName = "Spieler";
+    public bool PlayTutorial = true;
     public int Volume = 60;
     public int level = 1;
     public int highestlevelOne = 0;

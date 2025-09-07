@@ -615,7 +615,6 @@ GameObject:
   - component: {fileID: 502889079}
   - component: {fileID: 502889078}
   - component: {fileID: 502889077}
-  - component: {fileID: 502889081}
   - component: {fileID: 502889082}
   m_Layer: 5
   m_Name: Exit
@@ -738,22 +737,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 502889075}
   m_CullTransparentMesh: 1
---- !u!114 &502889081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502889075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9029f0981ba5b5778980b4458e4d3e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ButtonContainer: {fileID: 644732446}
-  CurrentButtonIndex: 0
-  ButtonClickSound: {fileID: 2129260695}
-  ButtonConfirmSound: {fileID: 220382478}
 --- !u!95 &502889082
 Animator:
   serializedVersion: 7
@@ -1869,7 +1852,11 @@ MonoBehaviour:
     playerName: Spieler
     Volume: 100
     level: 1
-    highestlevel: 0
+    highestlevelOne: 0
+    highestlevelTwo: 0
+    highestlevelTree: 0
+    highestlevelFour: 0
+    highestlevelFive: 0
     Hearts: 4
 --- !u!4 &1869947236
 Transform:

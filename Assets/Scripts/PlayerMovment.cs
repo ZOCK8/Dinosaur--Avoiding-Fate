@@ -29,9 +29,10 @@ public class PlayerMovment : MonoBehaviour
 
         }
 
-        else
+        else if (transform.position == lastPosition)
         {
             player.GetComponent<Animator>().SetBool("Walk", false);
+            player.GetComponent<Animator>().SetTrigger("Normal");
         }
         lastPosition = transform.position;
 
@@ -107,7 +108,7 @@ public class PlayerMovment : MonoBehaviour
     IEnumerator HeartDelay()
     {
         Delay = true;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.8f);
         Delay = false;
     }
 } 
