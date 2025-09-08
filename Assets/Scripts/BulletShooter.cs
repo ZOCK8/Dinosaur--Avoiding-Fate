@@ -87,7 +87,7 @@ public class BulletShooter : MonoBehaviour
                         // Hauptmeteor wurde getroffen - Explosion auslösen
                         if (meteorSpawning.meteor == meteor)
                         {
-                            StartCoroutine(meteorSpawning.DestroyMeteor());
+                            Destroy(meteorSpawning.meteor);
                         }
                         else
                         {

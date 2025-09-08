@@ -2391,8 +2391,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000019073, y: 113.31}
-  m_SizeDelta: {x: 515.576, y: 84.661}
+  m_AnchoredPosition: {x: -0.000019073, y: -2.189}
+  m_SizeDelta: {x: 515.576, y: 315.659}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &931513489
 MonoBehaviour:
@@ -3221,6 +3221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     playerName: Spieler
+    PlayTutorial: 1
     Volume: 100
     level: 1
     highestlevelOne: 0

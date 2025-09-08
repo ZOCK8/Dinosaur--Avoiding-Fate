@@ -1,8 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 public class MeteorSpawning : MonoBehaviour
 {
@@ -43,6 +42,7 @@ public class MeteorSpawning : MonoBehaviour
     public bool AutoLevel = true;
 
     [Header("Limit")]
+    [SerializeField] private int MeteorsToSpawn;
     public int MaxMeteors = 20;
 
     public GameObject player; // Im Inspector zuweisen!
@@ -53,6 +53,7 @@ public class MeteorSpawning : MonoBehaviour
 
     void Start()
     {
+        MeteorsToSpawn = 0;
         canSpawn = true;
         SpawnMeteorite();
     }
@@ -63,6 +64,9 @@ public class MeteorSpawning : MonoBehaviour
 
         if (AutoLevel && GameDataManager.Instance != null)
         {
+            float MeteorSpawning = GameDataManager.Instance.data.level / 1.45f;
+            MaxMeteors = (int)MeteorSpawning;
+            MeteorsToSpawn = (int)MeteorSpawning;       
             MeteorSpeed = 3f + (GameDataManager.Instance.data.level * 0.2f);
         }
 
@@ -154,51 +158,57 @@ public class MeteorSpawning : MonoBehaviour
 
     public void SpawnMeteorite()
     {
-        for (int i = 0; i < MeteorContainer.transform.childCount; i++)
-        MeteorContainer.transform.GetChild(i).GetComponent<Animator>().SetBool("MeteorSmall", false);
-        if (!canSpawn) return; // Zusätzliche Sicherheit
-        
-        canSpawn = false; // Sofort auf false setzen um mehrfaches Spawnen zu verhindern
-        
-        MeteorsSmall = false;
-        
-        if (CameraAnimator != null)
-            CameraAnimator.SetTrigger("Shake");
-        
-        meteor = Instantiate(meteorPrefab);
-        
-        if (meteor.GetComponent<CircleCollider2D>() == null)
-            meteor.AddComponent<CircleCollider2D>();
-            
-        meteor.transform.SetParent(MeteorContainer.transform);
-        meteor.name = "Meteor";
-        float offsetX = Random.Range(-8f, 8f);
-        Vector3 newSpawnPoint = new Vector3(SpawnPoint.x + offsetX, SpawnPoint.y, 0);
-        meteor.transform.position = newSpawnPoint;
-
-        
-        meteorgotoposition = new Vector3(
-            Random.Range(MinXPosition, MaxXPosition),
-            Random.Range(MinYPosition, MaxYPosition),
-            0f
-        );
-        
-        isMoving = true;
-        for (int i = 0; i < MeteorContainer.transform.childCount; i++)
-        MeteorContainer.transform.GetChild(i).GetComponent<Animator>().SetBool("MeteorSmall", false);
-        
-        // Level erhöhen mit Null-Check
-        if (GameDataManager.Instance != null && GameDataManager.Instance.data != null)
+        GameDataManager.Instance.data.level += 1;
+        for (int s = 0; s < MeteorsToSpawn; s++)
         {
-            GameDataManager.Instance.data.level += 1;
-            Debug.Log("Level increased to: " + GameDataManager.Instance.data.level);
+            for (int i = 0; i < MeteorContainer.transform.childCount; i++)
+                MeteorContainer.transform.GetChild(i).GetComponent<Animator>().SetBool("MeteorSmall", false);
+            if (!canSpawn) return; // Zusätzliche Sicherheit
+
+            canSpawn = false; // Sofort auf false setzen um mehrfaches Spawnen zu verhindern
+
+            MeteorsSmall = false;
+
+            if (CameraAnimator != null)
+                CameraAnimator.SetTrigger("Shake");
+
+            meteor = Instantiate(meteorPrefab);
+
+            if (meteor.GetComponent<CircleCollider2D>() == null)
+                meteor.AddComponent<CircleCollider2D>();
+
+            meteor.transform.SetParent(MeteorContainer.transform);
+            meteor.name = "Meteor";
+            float offsetX = UnityEngine.Random.Range(-8f, 8f);
+            Vector3 newSpawnPoint = new Vector3(SpawnPoint.x + offsetX, SpawnPoint.y, 0);
+            meteor.transform.position = newSpawnPoint;
+
+
+            meteorgotoposition = new Vector3(
+                UnityEngine.Random.Range(MinXPosition, MaxXPosition),
+                UnityEngine.Random.Range(MinYPosition, MaxYPosition),
+                0f
+            );
+
+            isMoving = true;
+            for (int i = 0; i < MeteorContainer.transform.childCount; i++)
+                MeteorContainer.transform.GetChild(i).GetComponent<Animator>().SetBool("MeteorSmall", false);
         }
+
+        // Level erhöhen mit Null-Check
+            if (GameDataManager.Instance != null && GameDataManager.Instance.data != null)
+            {
+                GameDataManager.Instance.data.level += 1;
+                Debug.Log("Level increased to: " + GameDataManager.Instance.data.level);
+            }
+        
     }
 
     public void DuplicateMeteor()
     {
+
         if (meteor == null) return;
-        int amount = Random.Range(3, 7);
+        int amount = UnityEngine.Random.Range(3, 7);
         Vector3 meteorPosition = meteor.transform.position;
 
         for (int i = 0; i < amount; i++)
@@ -220,23 +230,23 @@ public class MeteorSpawning : MonoBehaviour
 
             // Explosionseffekt
             Vector3 explosionOffset = new Vector3(
-                Random.Range(-0.5f, 0.5f),
-                Random.Range(0.1f, 0.2f),
+                UnityEngine.Random.Range(-0.5f, 0.5f),
+                UnityEngine.Random.Range(0.1f, 0.2f),
                 0f
             );
             dup.transform.position = meteorPosition + explosionOffset;
             dup.transform.SetParent(MeteorContainer.transform);
 
             Vector3 target = new Vector3(
-                Random.Range(MinXPosition, MaxXPosition),
-                Random.Range(-10f, -11f),
+                UnityEngine.Random.Range(MinXPosition, MaxXPosition),
+                UnityEngine.Random.Range(-10f, -11f),
                 0f
             );
 
             duplicatedMeteors.Add(dup);
             duplicatedTargets.Add(target);
             for (int s = 0; s < MeteorContainer.transform.childCount; s++)
-            MeteorContainer.transform.GetChild(s).GetComponent<Animator>().SetBool("MeteorSmall", true);
+                MeteorContainer.transform.GetChild(s).GetComponent<Animator>().SetBool("MeteorSmall", true);
         }
 
         // Meteorliste begrenzen
@@ -247,7 +257,7 @@ public class MeteorSpawning : MonoBehaviour
             duplicatedMeteors.RemoveAt(0);
             duplicatedTargets.RemoveAt(0);
         }
-        
+
         // Hauptmeteor zerstören
         Destroy(meteor);
         meteor = null;
@@ -260,7 +270,7 @@ public class MeteorSpawning : MonoBehaviour
         
         
         Vector3 meteorPosition = meteor.transform.position;
-        int amount = Random.Range(3, 7);
+        int amount = UnityEngine.Random.Range(3, 7);
         
         // Kleine Meteore spawnen
         for (int i = 0; i < amount; i++)
@@ -275,57 +285,21 @@ public class MeteorSpawning : MonoBehaviour
             dup.name = "MeteorFragment";
             
             Vector3 explosionOffset = new Vector3(
-                Random.Range(-0.2f, 0.2f),
-                Random.Range(0.1f, 0.3f),
+                UnityEngine.Random.Range(-0.2f, 0.2f),
+                UnityEngine.Random.Range(0.1f, 0.3f),
                 0f
             );
             dup.transform.position = meteorPosition + explosionOffset;
             dup.transform.SetParent(MeteorContainer.transform);
             
             Vector3 target = new Vector3(
-                Random.Range(MinXPosition, MaxXPosition),
-                Random.Range(-10f, -11f),
+                UnityEngine.Random.Range(MinXPosition, MaxXPosition),
+                UnityEngine.Random.Range(-10f, -11f),
                 0f
             );
             
             duplicatedMeteors.Add(dup);
             duplicatedTargets.Add(target);
-        }
-        
-        // Items spawnen
-        if (Items != null && Items.Count > 0)
-        {
-            int amountitem = Random.Range(1, 3);
-            for (int i = 0; i < amountitem; i++)
-            {
-                int itemIndex = Random.Range(0, Items.Count);
-                GameObject item = Instantiate(Items[itemIndex]);
-                
-                if (item.GetComponent<CircleCollider2D>() == null)
-                    item.AddComponent<CircleCollider2D>();
-                    
-                item.GetComponent<CircleCollider2D>().isTrigger = true;
-
-                Vector3 explosionOffset = new Vector3(
-                    Random.Range(-0.2f, 0.2f),
-                    Random.Range(0.1f, 0.3f),
-                    0f
-                );
-                item.transform.position = meteorPosition + explosionOffset;
-                item.name = "Item" + Items[itemIndex].name;
-                item.transform.SetParent(ItemContainer.transform);
-
-                // Zielposition: X-Position des Spielers
-                float playerX = (player != null) ? player.transform.position.x : 0f;
-                Vector3 itemTarget = new Vector3(
-                    playerX,
-                    Random.Range(-10f, -11f),
-                    0f
-                );
-                
-                movingItems.Add(item);
-                itemTargets.Add(itemTarget);
-            }
         }
         
         // Hauptmeteor zerstören
@@ -342,20 +316,16 @@ public class MeteorSpawning : MonoBehaviour
         if (meteor != null && meteor.GetComponent<Animator>() != null)
             meteor.GetComponent<Animator>().SetTrigger("Explosion");
             
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(0.6f);
 
-        // Item-Chance korrigiert: 10% Chance für Items, 90% für Meteore
-        int randomChance = Random.Range(1, 101);
-        
-        if (randomChance <= ItemChance) // 10% Chance für Items
-        {
-            Debug.Log("Item spawned.");
-            DuplicateItem();
-        }
-        else // 90% Chance für Meteore
+        if (meteor != null)
         {
             Debug.Log("Meteor duplicated!");
             DuplicateMeteor();
+        }
+        else if (meteor == null)
+        {
+            Debug.Log("Ther is no Meteor");
         }
         
         // canSpawn wird nach einer kurzen Verzögerung wieder auf true gesetzt
