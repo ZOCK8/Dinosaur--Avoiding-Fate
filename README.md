@@ -1,4 +1,4 @@
-# 🦖 Dinosaur: Avoiding Fate
+#  Dinosaur: Avoiding Fate
 
 **Developer:**  
 - Marrariche Lopes  
