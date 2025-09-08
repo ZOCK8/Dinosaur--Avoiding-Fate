@@ -1,4 +1,4 @@
-#  Dinosaur: Avoiding Fate (Staging)
+#  Dinosaur: Avoiding Fate
 
 **Developer:**  
 - Marrariche Lopes  
