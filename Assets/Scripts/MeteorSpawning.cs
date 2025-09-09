@@ -14,7 +14,7 @@ public class MeteorSpawning : MonoBehaviour
     public float spawnIntervalMax = 2f;
     public float MeteorSpeed = 5f;
     public float spawnIntervalMin = 0.5f;
-    
+
     [Header("Spawn Go To Settings")]
     public float MaxYPosition = 6f;
     public float MinYPosition = -6f;
@@ -54,8 +54,7 @@ public class MeteorSpawning : MonoBehaviour
     void Start()
     {
         MeteorsToSpawn = 0;
-        canSpawn = true;
-        SpawnMeteorite();
+        StartCoroutine(StardCoolDown());
     }
 
     void Update()
@@ -66,7 +65,7 @@ public class MeteorSpawning : MonoBehaviour
         {
             float MeteorSpawning = GameDataManager.Instance.data.level / 1.45f;
             MaxMeteors = (int)MeteorSpawning;
-            MeteorsToSpawn = (int)MeteorSpawning;       
+            MeteorsToSpawn = (int)MeteorSpawning;
             MeteorSpeed = 3f + (GameDataManager.Instance.data.level * 0.2f);
         }
 
@@ -89,10 +88,10 @@ public class MeteorSpawning : MonoBehaviour
         for (int i = duplicatedMeteors.Count - 1; i >= 0; i--)
         {
             if (i >= duplicatedMeteors.Count) continue; // Sicherheitscheck
-            
+
             GameObject dup = duplicatedMeteors[i];
             Vector3 target = duplicatedTargets[i];
-            
+
             if (dup != null)
             {
                 dup.transform.position = Vector3.MoveTowards(
@@ -121,10 +120,10 @@ public class MeteorSpawning : MonoBehaviour
         for (int i = movingItems.Count - 1; i >= 0; i--)
         {
             if (i >= movingItems.Count) continue; // Sicherheitscheck
-            
+
             GameObject item = movingItems[i];
             Vector3 target = itemTargets[i];
-            
+
             if (item != null)
             {
                 item.transform.position = Vector3.MoveTowards(
@@ -196,12 +195,12 @@ public class MeteorSpawning : MonoBehaviour
         }
 
         // Level erhöhen mit Null-Check
-            if (GameDataManager.Instance != null && GameDataManager.Instance.data != null)
-            {
-                GameDataManager.Instance.data.level += 1;
-                Debug.Log("Level increased to: " + GameDataManager.Instance.data.level);
-            }
-        
+        if (GameDataManager.Instance != null && GameDataManager.Instance.data != null)
+        {
+            GameDataManager.Instance.data.level += 1;
+            Debug.Log("Level increased to: " + GameDataManager.Instance.data.level);
+        }
+
     }
 
     public void DuplicateMeteor()
@@ -267,23 +266,23 @@ public class MeteorSpawning : MonoBehaviour
     public void DuplicateItem()
     {
         if (meteor == null) return;
-        
-        
+
+
         Vector3 meteorPosition = meteor.transform.position;
         int amount = UnityEngine.Random.Range(3, 7);
-        
+
         // Kleine Meteore spawnen
         for (int i = 0; i < amount; i++)
         {
             MeteorsSmall = true;
             GameObject dup = Instantiate(meteorPrefab);
-            
+
             if (dup.GetComponent<CircleCollider2D>() == null)
                 dup.AddComponent<CircleCollider2D>();
-                
+
             dup.transform.localScale = meteor.transform.localScale / 2f;
             dup.name = "MeteorFragment";
-            
+
             Vector3 explosionOffset = new Vector3(
                 UnityEngine.Random.Range(-0.2f, 0.2f),
                 UnityEngine.Random.Range(0.1f, 0.3f),
@@ -291,17 +290,17 @@ public class MeteorSpawning : MonoBehaviour
             );
             dup.transform.position = meteorPosition + explosionOffset;
             dup.transform.SetParent(MeteorContainer.transform);
-            
+
             Vector3 target = new Vector3(
                 UnityEngine.Random.Range(MinXPosition, MaxXPosition),
                 UnityEngine.Random.Range(-10f, -11f),
                 0f
             );
-            
+
             duplicatedMeteors.Add(dup);
             duplicatedTargets.Add(target);
         }
-        
+
         // Hauptmeteor zerstören
         Destroy(meteor);
         meteor = null;
@@ -312,10 +311,10 @@ public class MeteorSpawning : MonoBehaviour
     {
         isMoving = false;
         Debug.Log("Meteor reached the target position.");
-        
+
         if (meteor != null && meteor.GetComponent<Animator>() != null)
             meteor.GetComponent<Animator>().SetTrigger("Explosion");
-            
+
         yield return new WaitForSeconds(0.6f);
 
         if (meteor != null)
@@ -327,9 +326,16 @@ public class MeteorSpawning : MonoBehaviour
         {
             Debug.Log("Ther is no Meteor");
         }
-        
+
         // canSpawn wird nach einer kurzen Verzögerung wieder auf true gesetzt
         yield return new WaitForSeconds(0.1f);
         canSpawn = true;
+    }
+    IEnumerator StardCoolDown()
+    {
+        yield return new WaitForSeconds(1.25f);
+        Debug.Log("Coldown is over");
+        canSpawn = true;
+        SpawnMeteorite();
     }
 }
